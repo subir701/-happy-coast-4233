@@ -1,6 +1,7 @@
 package com.masai.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,12 +13,12 @@ public class Criminal implements Serializable{
 	private String identifying_mark;
 	private String first_arrest_date;
 	private String arrested_from_ps_area;
-	private List<String> crime;
-	public List<String> getCrmie() {
+	private List<Crime> crime;
+	public List<Crime> getCrmie() {
 		return crime;
 	}
-	public void setCrmie(List<String> crmie) {
-		this.crime = crmie;
+	public void setCrmie(Crime crime) {
+		this.crime.add(crime);
 	}
 	public Criminal(int id, String name, String dob, char gender, String identifying_mark, String first_arrest_date,
 			String arrested_from_ps_area) {
@@ -29,6 +30,7 @@ public class Criminal implements Serializable{
 		this.identifying_mark = identifying_mark;
 		this.first_arrest_date = first_arrest_date;
 		this.arrested_from_ps_area = arrested_from_ps_area;
+		this.crime= new ArrayList<>();
 	}
 	public int getId() {
 		return id;
@@ -92,9 +94,9 @@ public class Criminal implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Criminal [id=" + id + ", name=" + name + ", dob=" + dob + ", gender=" + gender + ", identifying_mark="
-				+ identifying_mark + ", first_arrest_date=" + first_arrest_date + ", arrested_from_ps_area="
-				+ arrested_from_ps_area + "]";
+		return "Id = " + id + "|| Name = " + name + "|| Date of birth = " + dob + "|| Gender = " + gender + "|| Identifying Mark = "
+				+ identifying_mark + "|| First Arrest Date = " + first_arrest_date + "|| Arrested from police station Area = "
+				+ arrested_from_ps_area +"|| Type of crimes = "+getCrmie();
 	}
 	
 }
