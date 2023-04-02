@@ -10,7 +10,7 @@ import com.masai.exception.CrimeException;
 import com.masai.exception.CriminalException;
 import com.masai.exception.DublicateException;
 import com.masai.exception.InvalidDetailException;
-import com.masai.exception.NotFound;
+import com.masai.exception.NotFoundd;
 import com.masai.service.CrimeService;
 import com.masai.service.CrimeServiceImple;
 import com.masai.service.CriminalService;
@@ -32,13 +32,15 @@ public class Main {
 			int preference = 0;
 			
 			do {
-				System.out.println("Please enter your preference, "+" '1' --> Admin login , '2' --> Show data , "
+				System.out.println("Please enter your preference, "+" '1' --> Admin login , '2' --> Genral Data , "
 						+ " '0' for exit");
 				preference =sc.nextInt();
 				switch(preference) {
 				case 1:
 					adminFunctionality(sc,crime,criminal);
 					break;
+				case 2:
+					userFunctionality(sc,crime,criminal);
 				case 0:
 					System.out.println("successfully existed from the system");
 					break;
@@ -59,6 +61,79 @@ public class Main {
 				System.out.println(e.getMessage());
 			}
 		}
+	}
+
+	public static void userFunctionality(Scanner sc, Map<Integer, Crime> crime, Map<Integer, Criminal> criminal) {
+		CrimeService crimeservice= new CrimeServiceImple();
+		CriminalService criminalservice = new CriminalServiceImpl();
+		int choice=0;
+		try {
+			do {
+				System.out.println("Press 1 view total crime for each police station area for a date range");
+				System.out.println("Press 2 view total crime for each crime type for a date range");
+				System.out.println("Press 3 search for criminal by name");
+				System.out.println("Press 4 search for crime by description");
+				System.out.println("Press 0 LogOut");
+				choice=sc.nextInt();
+				
+				switch(choice) {
+				case 1:
+					userTotalCrimeArea(sc,crime,crimeservice);
+					break;
+				case 2:
+					userTotalCrimeType(sc,crime,crimeservice);
+					break;
+				case 3:
+					userSearchByName(sc,criminal,criminalservice);
+					break;
+				case 4:
+					userSearchByDesc(sc,crime,crimeservice);
+					break;
+				case 0:
+					System.out.println("Successfully logout !!");
+				}
+			} while (choice!=0);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+
+	public static void userSearchByDesc(Scanner sc, Map<Integer, Crime> crime, CrimeService crimeservice) {
+		System.out.println("Please enter description of crime : ");
+		sc.nextLine();
+		String desc=sc.nextLine();
+		crimeservice.descriptionCrime(crime, desc);
+	}
+
+	public static void userSearchByName(Scanner sc, Map<Integer, Criminal> criminal, CriminalService criminalservice) {
+		System.out.println("Please enter name of criminal : ");
+		sc.nextLine();
+		String name=sc.nextLine();
+		criminalservice.findCriminal(criminal, name);
+	}
+
+	public static void userTotalCrimeType(Scanner sc, Map<Integer, Crime> crime, CrimeService crimeservice) {
+		System.out.println("Enter type of crime : ");
+		sc.nextLine();
+		String name=sc.nextLine();
+		System.out.println("Enter start date : ");
+		String start=sc.next();
+		System.out.println("Enter end date : ");
+		String end= sc.next();
+		crimeservice.totalCrimeType(crime, start, end, name);
+		
+	}
+
+	public static void userTotalCrimeArea(Scanner sc, Map<Integer, Crime> crime, CrimeService crimeservice) {
+		System.out.println("Enter police station area : ");
+		sc.nextLine();
+		String name=sc.nextLine();
+		System.out.println("Enter start date : ");
+		String start=sc.next();
+		System.out.println("Enter end date : ");
+		String end= sc.next();
+		crimeservice.totalCrime(crime, start, end, name);
 	}
 
 	public static void adminFunctionality(Scanner sc, Map<Integer, Crime> crime, Map<Integer, Criminal> criminal)throws InvalidDetailException, CriminalException,CrimeException{
@@ -146,16 +221,18 @@ public class Main {
 		String type= sc.next();
 		System.out.println("Enter description of crime : ");
 		sc.nextLine();
-		String desc= sc.next();
+		String desc= sc.nextLine();
 		System.out.println("Enter police station area where crime held : ");
-		String ps=sc.next();
+		
+		String ps=sc.nextLine();
 		System.out.println("Enter date of crime : ");
 		String date=sc.next();
 		System.out.println("Enter name of victims : ");
 		sc.nextLine();
-		String name=sc.next();
+		String name=sc.nextLine();
 		Crime cr=new Crime(IDGenration.generateId(),type,desc,ps,date,name);
 		str= crimeService.addCrime(cr, crime);
+		crime=FileExist.crimeFile();
 		return str;
 	}
 	
@@ -167,6 +244,7 @@ public class Main {
 		System.out.println("Please enter the id of crime to be deleted : ");
 		int id = sc.nextInt();
 		crimeService.deleteCrime(id, crime);
+		crime=FileExist.crimeFile();
 	}
 	
 	public static String adminUpdateCrime(Scanner sc,Map<Integer,Crime> crime,CrimeService crimeService) throws CrimeException{
@@ -180,7 +258,7 @@ public class Main {
 		sc.nextLine();
 		String desc= sc.nextLine();
 		System.out.println("Enter police station area where crime held : ");
-		sc.nextLine();
+		
 		String ps=sc.nextLine();
 		System.out.println("Enter date of crime : ");
 		String date=sc.next();
@@ -189,6 +267,7 @@ public class Main {
 		String name=sc.nextLine();
 		Crime update = new Crime(id,type,desc,ps,date,name);
 		result= crimeService.updateCrime(id, update, crime);
+		crime=FileExist.crimeFile();
 		return result;
 	}
 	
@@ -213,6 +292,7 @@ public class Main {
 		String ps=sc.nextLine();
 		Criminal cm= new Criminal(IDGenration.generateId(),name,dob,gender,marks,date,ps);
 		str=criminalService.addCriminal(cm, criminal);
+		criminal=FileExist.criminalFile();
 		return str;
 	}
 	
@@ -224,6 +304,7 @@ public class Main {
 		System.out.println("Please enter the id of criminal to be deleted : ");
 		int id = sc.nextInt();
 		criminalService.deleteCriminal(id, criminal);
+		criminal=FileExist.criminalFile();
 	}
 
 	public static String adminUpdateCriminal(Scanner sc,Map<Integer,Criminal> criminal, CriminalService criminalService)throws CriminalException{
@@ -248,10 +329,11 @@ public class Main {
 		String ps=sc.nextLine();
 		Criminal data= new Criminal(id, name, dob, gender, marks, date, ps);
 		update= criminalService.updateCriminal(id, data, criminal);
+		criminal=FileExist.criminalFile();
 		return update;
 	}
 
-	public static void adminassignCriminal(Scanner sc, Map<Integer,Criminal> criminal,Map<Integer,Crime> crime ,CriminalService criminalService)throws NotFound,CriminalException {
+	public static void adminassignCriminal(Scanner sc, Map<Integer,Criminal> criminal,Map<Integer,Crime> crime ,CriminalService criminalService)throws NotFoundd,CriminalException {
 		System.out.println("Please enter criminal id : ");
 		int id=sc.nextInt();
 		Criminal cr=criminal.get(id);
@@ -260,12 +342,14 @@ public class Main {
 		Crime cm=crime.get(idc);
 		
 		criminalService.assignCriminal(id, cr, cm, criminal);
+		criminal=FileExist.criminalFile();
 	}
 
-	public static void adminRemoveCrime(Scanner sc,Map<Integer,Criminal> criminal,CriminalService criminalService)throws NotFound,CriminalException{
+	public static void adminRemoveCrime(Scanner sc,Map<Integer,Criminal> criminal,CriminalService criminalService)throws NotFoundd,CriminalException{
 		System.out.println("Please enter criminal id : ");
 		int id=sc.nextInt();
 		Criminal cr= criminal.get(id);
 		criminalService.removeCriminal(id, cr.getCrmie(), criminal);
+		criminal=FileExist.criminalFile();
 	}
 }
