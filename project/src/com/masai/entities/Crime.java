@@ -74,8 +74,8 @@ public class Crime implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Crime [id=" + id + ", type=" + type + ", description=" + description + ", ps_area=" + ps_area
-				+ ", date=" + date + ", name=" + name + "]";
+		return "Id = " + id + "|| Type of crime = " + type + "|| Description = " + description + "|| Police Station Area = " + ps_area
+				+ "|| Date = " + date + "|| Name of victims = " + name ;
 	}
 	
 }

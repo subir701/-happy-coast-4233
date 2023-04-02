@@ -10,6 +10,7 @@ import com.masai.exception.CrimeException;
 import com.masai.exception.CriminalException;
 import com.masai.exception.DublicateException;
 import com.masai.exception.InvalidDetailException;
+import com.masai.exception.NotFound;
 import com.masai.service.CrimeService;
 import com.masai.service.CrimeServiceImple;
 import com.masai.service.CriminalService;
@@ -77,6 +78,8 @@ public class Main {
 				System.out.println("Press 6 view all the criminal");
 				System.out.println("Press 7 delete the criminal");
 				System.out.println("Press 8 update the criminal");
+				System.out.println("Press 9 assign a crime to a criminal");
+				System.out.println("Press 10 remove a crime to a criminal");
 				System.out.println("Press 0 logout");
 				choice= sc.nextInt();
 				
@@ -89,12 +92,34 @@ public class Main {
 					adminViewAllCrime(crime, crimeservice);
 					break;
 				case 3:
-					String update=adminUpdateCrime(sc, crime, crimeservice);
-					System.out.println(update);
-					break;
-				case 4:
 					adminDeleteCrime(sc, crime, crimeservice);
 					break;
+				case 4:
+					String update=adminUpdateCrime(sc, crime, crimeservice);
+					System.out.println(update);
+					
+					break;
+				case 5:
+					String adde= adminAddCriminal(sc, criminal, criminalservice);
+					System.out.println(adde);
+					break;
+				case 6:
+					adminViewAllCriminal(criminal, criminalservice);
+					break;
+				case 7:
+					adminDeleteCriminal(sc, criminal, criminalservice);
+					break;
+				case 8:
+					adminUpdateCriminal(sc, criminal, criminalservice);
+					break;
+				case 9:
+					adminassignCriminal(sc, criminal, crime, criminalservice);
+					break;
+				case 10:
+					adminRemoveCrime(sc, criminal, criminalservice);
+					break;
+				case 0:
+					System.out.println("Successfully LogOut");
 				default:
 					throw new IllegalArgumentException("Unexpected value: " + choice);
 				}
@@ -120,12 +145,14 @@ public class Main {
 		System.out.println("Enter type of crime : ");
 		String type= sc.next();
 		System.out.println("Enter description of crime : ");
+		sc.nextLine();
 		String desc= sc.next();
 		System.out.println("Enter police station area where crime held : ");
 		String ps=sc.next();
 		System.out.println("Enter date of crime : ");
 		String date=sc.next();
 		System.out.println("Enter name of victims : ");
+		sc.nextLine();
 		String name=sc.next();
 		Crime cr=new Crime(IDGenration.generateId(),type,desc,ps,date,name);
 		str= crimeService.addCrime(cr, crime);
@@ -150,15 +177,95 @@ public class Main {
 		System.out.println("Enter the type of crime : ");
 		String type=sc.next();
 		System.out.println("Enter description of crime : ");
+		sc.nextLine();
 		String desc= sc.nextLine();
 		System.out.println("Enter police station area where crime held : ");
+		sc.nextLine();
 		String ps=sc.nextLine();
 		System.out.println("Enter date of crime : ");
 		String date=sc.next();
 		System.out.println("Enter name of victims : ");
+		sc.nextLine();
 		String name=sc.nextLine();
 		Crime update = new Crime(id,type,desc,ps,date,name);
-		result= crimeService.updateCrime(id, null, crime);
+		result= crimeService.updateCrime(id, update, crime);
 		return result;
+	}
+	
+	public static String adminAddCriminal(Scanner sc,Map<Integer,Criminal> criminal,CriminalService criminalService)throws DublicateException{
+		String str=null;
+		System.out.println("Please enter criminal details");
+		System.out.println("Enter criminal name : ");
+		sc.nextLine();
+		String name= sc.nextLine();
+		
+		System.out.println("Enter date of birth : ");
+		String dob= sc.next();
+		System.out.println("Enter gender of criminal : ");
+		char gender=sc.next().charAt(0);
+		System.out.println("Enter Identifying marks : ");
+		sc.nextLine();
+		String marks=sc.nextLine();
+		System.out.println("Enter arrest date : ");
+		String date=sc.next();
+		System.out.println("Enter arrested police station : ");
+		sc.nextLine();
+		String ps=sc.nextLine();
+		Criminal cm= new Criminal(IDGenration.generateId(),name,dob,gender,marks,date,ps);
+		str=criminalService.addCriminal(cm, criminal);
+		return str;
+	}
+	
+	public static void adminViewAllCriminal(Map<Integer,Criminal> criminal,CriminalService criminalService) throws CriminalException{
+		criminalService.viewAllCriminal(criminal);
+	}
+	
+	public static void adminDeleteCriminal(Scanner sc, Map<Integer,Criminal> criminal,CriminalService criminalService)throws CriminalException{
+		System.out.println("Please enter the id of criminal to be deleted : ");
+		int id = sc.nextInt();
+		criminalService.deleteCriminal(id, criminal);
+	}
+
+	public static String adminUpdateCriminal(Scanner sc,Map<Integer,Criminal> criminal, CriminalService criminalService)throws CriminalException{
+		String update=null;
+		System.out.println("Please enter the id of criminal : ");
+		int id=sc.nextInt();
+		System.out.println("Please enter the updated details");
+		System.out.println("Enter criminal name : ");
+		sc.nextLine();
+		String name= sc.nextLine();
+		System.out.println("Enter date of birth : ");
+		String dob= sc.next();
+		System.out.println("Enter gender of criminal : ");
+		char gender=sc.next().charAt(0);
+		System.out.println("Enter Identifying marks : ");
+		sc.nextLine();
+		String marks=sc.nextLine();
+		System.out.println("Enter arrest date : ");
+		String date=sc.next();
+		System.out.println("Enter arrested police station : ");
+		sc.nextLine();
+		String ps=sc.nextLine();
+		Criminal data= new Criminal(id, name, dob, gender, marks, date, ps);
+		update= criminalService.updateCriminal(id, data, criminal);
+		return update;
+	}
+
+	public static void adminassignCriminal(Scanner sc, Map<Integer,Criminal> criminal,Map<Integer,Crime> crime ,CriminalService criminalService)throws NotFound,CriminalException {
+		System.out.println("Please enter criminal id : ");
+		int id=sc.nextInt();
+		Criminal cr=criminal.get(id);
+		System.out.println("Please enter crime id to assign : ");
+		int idc=sc.nextInt();
+		Crime cm=crime.get(idc);
+		
+		criminalService.assignCriminal(id, cr, cm, criminal);
+	}
+
+	public static void adminRemoveCrime(Scanner sc,Map<Integer,Criminal> criminal,CriminalService criminalService)throws NotFound,CriminalException{
+		System.out.println("Please enter criminal id : ");
+		int id=sc.nextInt();
+		Criminal cr= criminal.get(id);
+		criminalService.removeCriminal(id, cr.getCrmie(), criminal);
 	}
 }

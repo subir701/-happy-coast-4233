@@ -1,10 +1,14 @@
 package com.masai.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.masai.entities.Crime;
 import com.masai.entities.Criminal;
 import com.masai.exception.CriminalException;
 import com.masai.exception.DublicateException;
+import com.masai.exception.NotFound;
 
 public class CriminalServiceImpl implements CriminalService{
 
@@ -55,6 +59,42 @@ public class CriminalServiceImpl implements CriminalService{
 			throw new CriminalException("Criminal list is empty");
 		}
 		
+	}
+
+	@Override
+	public void assignCriminal(int id, Criminal cr, Crime cm, Map<Integer, Criminal> criminal) throws NotFound,CriminalException {
+		// TODO Auto-generated method stub
+		if(criminal !=null && criminal.size()>0) {
+			
+			if(criminal.containsKey(id)) {
+				
+				cr.setCrmie(cm);
+				criminal.put(id, cr);
+				System.out.println("Crime Assigned to the criminal");
+			}else {
+				throw new NotFound("Criminal is not found");
+			}
+		}else {
+			throw new CriminalException("Criminal list is empty");
+		}
+	}
+
+	@Override
+	public void removeCriminal(int id, List<Crime> crime ,  Map<Integer, Criminal> criminal) throws NotFound,CriminalException{
+		// TODO Auto-generated method stub
+		if(criminal !=null && criminal.size()>0) {
+			if(criminal.containsKey(id)) {
+				
+				Criminal cm=criminal.get(id);
+				cm.getCrmie().remove(0);
+				criminal.put(id, cm);
+				System.out.println("Crime is removed from the criminal");
+			}else {
+				throw new NotFound("Criminal is not found");
+			}
+		}else {
+			throw new CriminalException("Criminal list is empty");
+		}
 	}
 
 }
