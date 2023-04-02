@@ -8,7 +8,7 @@ import com.masai.entities.Crime;
 import com.masai.entities.Criminal;
 import com.masai.exception.CriminalException;
 import com.masai.exception.DublicateException;
-import com.masai.exception.NotFound;
+import com.masai.exception.NotFoundd;
 
 public class CriminalServiceImpl implements CriminalService{
 
@@ -62,7 +62,7 @@ public class CriminalServiceImpl implements CriminalService{
 	}
 
 	@Override
-	public void assignCriminal(int id, Criminal cr, Crime cm, Map<Integer, Criminal> criminal) throws NotFound,CriminalException {
+	public void assignCriminal(int id, Criminal cr, Crime cm, Map<Integer, Criminal> criminal) throws NotFoundd,CriminalException {
 		// TODO Auto-generated method stub
 		if(criminal !=null && criminal.size()>0) {
 			
@@ -72,7 +72,7 @@ public class CriminalServiceImpl implements CriminalService{
 				criminal.put(id, cr);
 				System.out.println("Crime Assigned to the criminal");
 			}else {
-				throw new NotFound("Criminal is not found");
+				throw new NotFoundd("Criminal is not found");
 			}
 		}else {
 			throw new CriminalException("Criminal list is empty");
@@ -80,7 +80,7 @@ public class CriminalServiceImpl implements CriminalService{
 	}
 
 	@Override
-	public void removeCriminal(int id, List<Crime> crime ,  Map<Integer, Criminal> criminal) throws NotFound,CriminalException{
+	public void removeCriminal(int id, List<Crime> crime ,  Map<Integer, Criminal> criminal) throws NotFoundd,CriminalException{
 		// TODO Auto-generated method stub
 		if(criminal !=null && criminal.size()>0) {
 			if(criminal.containsKey(id)) {
@@ -90,11 +90,27 @@ public class CriminalServiceImpl implements CriminalService{
 				criminal.put(id, cm);
 				System.out.println("Crime is removed from the criminal");
 			}else {
-				throw new NotFound("Criminal is not found");
+				throw new NotFoundd("Criminal is not found");
 			}
 		}else {
 			throw new CriminalException("Criminal list is empty");
 		}
 	}
+
+	@Override
+	public void findCriminal(Map<Integer, Criminal> criminal, String name) {
+		for(Map.Entry<Integer, Criminal> i : criminal.entrySet()) {
+			if(i.getValue().getName().equals(name)) {
+				System.out.println("Name = " + name + "|| Date of birth = " + i.getValue().getDob() + "|| Gender = " + i.getValue().getGender() + "|| Identifying Mark = "
+				+ i.getValue().getIdentifying_mark() + "|| First Arrest Date = " + i.getValue().getFirst_arrest_date() + "|| Arrested from police station Area = "
+				+ i.getValue().getArrested_from_ps_area() +"|| Type of crimes = "+i.getValue().getCrmie().toString());
+			}
+		}
+		
+	}
+
+	
+		
+	
 
 }
