@@ -12,7 +12,7 @@
 <p>Genral user</p>
 
 <h1>Admin Feature</h1>
-<p>* Add Crime</p>
+* <p> Add Crime</p>
 <p>* Update Crime</p>
 <p>* Delete Crime</p>
 <p>* Add Criminal</p>
