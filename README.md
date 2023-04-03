@@ -12,7 +12,7 @@
 <p>Genral user</p>
 
 <h1>Admin Feature</h1>
-* <p> Add Crime</p>
+<p>* Add Crime</p>
 <p>* Update Crime</p>
 <p>* Delete Crime</p>
 <p>* Add Criminal</p>
@@ -22,7 +22,7 @@
 <p>* Remove Crime to Criminal</p>
 
 <h1>General User</h1>
-<p>*Can view total crime for each police station area for a date range</p>
-<p>*Can view total crime for each crime type for a date range</p>
-<p>*Can search for criminal by name</p>
-<p>*Can search for crime by description</p>
+<p>* Can view total crime for each police station area for a date range</p>
+<p>* Can view total crime for each crime type for a date range</p>
+<p>* Can search for criminal by name</p>
+<p>* Can search for crime by description</p>
